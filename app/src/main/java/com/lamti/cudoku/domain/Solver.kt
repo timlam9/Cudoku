@@ -15,7 +15,6 @@ class Solver {
         solverGrid.splitToRows().forEach { println("          " + it.map { it.value }) }
         println("================================================")
 
-
         return solverGrid
     }
 
@@ -62,29 +61,36 @@ class Solver {
         for (index in 0 until board.size) {
             if (board[index].value == 0) {
                 for (possibleInput in 1..GRID_SIZE) {
-                    if (isPossibleInputValid(board = board, number = possibleInput, row = rowIndex(index, GRID_SIZE), column = columnIndex(index, GRID_SIZE), region = regionIndex(index, GRID_SIZE))) {
-                        board[index] = Cell(possibleInput)
-                        println("Add possible input: $possibleInput in position: $index")
+                    if (isPossibleInputValid(
+                            board = board,
+                            number = possibleInput,
+                            row = rowIndex(index, GRID_SIZE),
+                            column = columnIndex(index, GRID_SIZE),
+                            region = regionIndex(index, GRID_SIZE)
+                        )
+                    ) {
+                        board[index] = Cell(possibleInput, false)
+//                        println("Add possible input: $possibleInput in position: $index")
 
                         if (solveBoard(board)) {
-                            println("Board solved")
+//                            println("Board solved")
                             return true
                         } else {
-                            println("Delete input: $possibleInput in position: $index")
-                            board[index] = Cell(0)
+//                            println("Delete input: $possibleInput in position: $index")
+                            board[index] = Cell(0, false)
                         }
                     }
                 }
-                println("Board didn't solved")
+//                println("Board didn't solved")
                 return false
             }
         }
-        println("Board is solved")
+//        println("Board is solved")
         return true
     }
 
     companion object {
 
-        private const val GRID_SIZE = 9
+        const val GRID_SIZE = 9
     }
 }

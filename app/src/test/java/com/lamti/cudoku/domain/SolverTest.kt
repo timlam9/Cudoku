@@ -10,9 +10,9 @@ class SolverTest {
     @Test
     fun `generate solution`() {
         val startingGrid = createGridFrom(initialGrid)
-        val finalGrid = createGridFrom(correctSolutionGrid)
+        val finalGrid = createGridFrom(correctSolutionGrid).map { it.value }
 
-        val result = solver.solve(startingGrid)
+        val result = solver.solve(startingGrid).map { it.value }
 
         assertEquals(finalGrid, result)
     }

@@ -1,4 +1,4 @@
-package com.lamti.cudoku.ui.theme
+package com.lamti.cudoku.presentation.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

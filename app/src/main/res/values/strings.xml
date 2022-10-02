@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Cudoku</string>
+    <string name="solve">Solve</string>
 </resources>
