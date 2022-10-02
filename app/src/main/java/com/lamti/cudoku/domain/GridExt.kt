@@ -10,17 +10,17 @@ fun List<Cell>.splitToColumns(n: Int): List<List<Cell>> = splitToRows().run {
     }
 }
 
-fun List<Cell>.splitToRegions(n: Int): List<List<Cell>> {
-    val regions: List<List<Cell>> = mapIndexed { index, cell -> squareIndex(index, n) to cell }
-        .groupBy { it.first }
-        .map { it.value.map { pair -> pair.second } }
+fun List<Cell>.splitToRegions(n: Int): List<List<Cell>> = mapIndexed { index, cell -> regionIndex(index, n) to cell }
+    .groupBy { it.first }
+    .map { it.value.map { pair -> pair.second } }
 
-    regions.forEach { println(it) }
-    return regions
-}
-
-private fun squareIndex(index: Int, n: Int): Int {
+fun regionIndex(index: Int, n: Int): Int {
     val squareColumn = (index % n) / 3
     val squareRow = (index / n) / 3
     return 3 * squareRow + squareColumn
 }
+
+fun rowIndex(index: Int, n: Int): Int = index.div(n)
+
+fun columnIndex(index: Int, n: Int): Int = index.mod(n)
+
