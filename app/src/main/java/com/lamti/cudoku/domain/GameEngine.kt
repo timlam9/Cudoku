@@ -1,21 +1,19 @@
 package com.lamti.cudoku.domain
 
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.SharedFlow
 
 class GameEngine(private val solver: Solver = Solver()) {
 
-    private val _board: MutableStateFlow<List<Cell>> = MutableStateFlow(createGridFrom(initialGrid))
-    val board: StateFlow<List<Cell>> = _board
+    val board: SharedFlow<List<Cell>> = solver.board
 
-    fun solve() {
-        val solvedGrid = solver.solve(_board.value)
-        _board.update { solvedGrid }
+    suspend fun solve(grid: List<Cell> = createGridFrom(initialGrid)): Boolean = solver.solve(grid)
+
+    suspend fun createNewGame() {
+        solver.createNewBoard(createGridFrom(initialGrid))
     }
 }
 
-private const val initialGrid = "5,3,,,7,,,,\n" +
+const val initialGrid = "5,3,,,7,,,,\n" +
         "6,,,1,9,5,,,\n" +
         ",9,8,,,,,6,\n" +
         "8,,,,6,,,,3\n" +

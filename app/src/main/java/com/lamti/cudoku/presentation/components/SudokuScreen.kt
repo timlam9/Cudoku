@@ -1,6 +1,5 @@
 package com.lamti.cudoku.presentation.components
 
-
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,7 +16,9 @@ import androidx.compose.ui.res.stringResource
 import com.lamti.cudoku.R
 
 @Composable
-fun SudokuScreen(board: List<UiBox>, boxSize: Int, isLoading: Boolean, onSolveClick: () -> Unit) {
+fun SudokuScreen(board: List<UiBox>, boxSize: Int, isLoading: Boolean, isSolved: Boolean, onSolveClick: () -> Unit) {
+    val buttonText = if (isSolved) stringResource(R.string.play_again) else stringResource(R.string.solve)
+
     Column(modifier = Modifier.fillMaxSize()) {
         SudokuGrid(board, boxSize)
         Box(
@@ -28,20 +29,8 @@ fun SudokuScreen(board: List<UiBox>, boxSize: Int, isLoading: Boolean, onSolveCl
                 CircularProgressIndicator()
             }
             androidx.compose.animation.AnimatedVisibility(visible = !isLoading) {
-                TextButton(text = stringResource(R.string.solve), onClick = onSolveClick)
+                TextButton(text = buttonText, onClick = onSolveClick)
             }
         }
-    }
-}
-
-
-@Composable
-fun TextButton(modifier: Modifier = Modifier, text: String, onClick: () -> Unit) {
-    Button(
-        modifier = modifier,
-        onClick = onClick,
-        colors = ButtonDefaults.textButtonColors(backgroundColor = Color.LightGray)
-    ) {
-        Text(text, color = MaterialTheme.colors.onBackground)
     }
 }

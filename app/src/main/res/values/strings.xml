@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Cudoku</string>
     <string name="solve">Solve</string>
+    <string name="play_again">Play again</string>
 </resources>

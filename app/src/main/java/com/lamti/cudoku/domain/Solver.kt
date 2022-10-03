@@ -1,23 +1,19 @@
 package com.lamti.cudoku.domain
 
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+
 class Solver {
 
-    fun solve(startingGrid: List<Cell>): List<Cell> {
-        val solverGrid: MutableList<Cell> = startingGrid.toMutableList()
+    private val _board: MutableSharedFlow<List<Cell>> = MutableSharedFlow()
+    val board: SharedFlow<List<Cell>> = _board.asSharedFlow()
 
-        println("================== Initial grid ==================")
-        solverGrid.splitToRows().forEach { println("          " + it.map { it.value }) }
-        println("==================================================")
-
-        solveBoard(solverGrid)
-
-        println("================== Final grid ==================")
-        solverGrid.splitToRows().forEach { println("          " + it.map { it.value }) }
-        println("================================================")
-
-        return solverGrid
+    suspend fun createNewBoard(grid: List<Cell>) {
+        _board.emit(grid)
     }
 
+    suspend fun solve(initialGrid: List<Cell>): Boolean = solveBoard(initialGrid.toMutableList())
 
     private fun isNumberInRow(board: List<Cell>, number: Int, row: Int): Boolean {
         for (i in 0 until GRID_SIZE) {
@@ -57,7 +53,7 @@ class Solver {
                 !isNumberInColumn(board, number, column) &&
                 !isNumberInRegion(board, number, region)
 
-    private fun solveBoard(board: MutableList<Cell>): Boolean {
+    private suspend fun solveBoard(board: MutableList<Cell>): Boolean {
         for (index in 0 until board.size) {
             if (board[index].value == 0) {
                 for (possibleInput in 1..GRID_SIZE) {
@@ -70,22 +66,24 @@ class Solver {
                         )
                     ) {
                         board[index] = Cell(possibleInput, false)
-//                        println("Add possible input: $possibleInput in position: $index")
+                        println("Add possible input: $possibleInput in position: $index")
+                        _board.emit(board)
 
                         if (solveBoard(board)) {
-//                            println("Board solved")
+                            println("Board solved")
                             return true
                         } else {
-//                            println("Delete input: $possibleInput in position: $index")
+                            println("Delete input: $possibleInput in position: $index")
                             board[index] = Cell(0, false)
+                            _board.emit(board)
                         }
                     }
                 }
-//                println("Board didn't solved")
+                println("Board didn't solved")
                 return false
             }
         }
-//        println("Board is solved")
+        println("Board is solved")
         return true
     }
 
