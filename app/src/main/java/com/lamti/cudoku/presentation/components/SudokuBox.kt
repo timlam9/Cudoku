@@ -21,12 +21,13 @@ import com.lamti.cudoku.domain.Cell
 fun SudokuBox(
     modifier: Modifier = Modifier,
     isBoxClicked: Boolean,
+    isOddBox: Boolean,
     box: SudokuDataBox,
 ) {
     SudokuBox(
         modifier = modifier,
         text = if (box.value != EMPTY_VALUE) box.value.toString() else "",
-        color = if (isBoxClicked) Color.Blue else Color.White,
+        color = if (isBoxClicked) Color.Blue else { if (isOddBox) Color.White else Color.LightGray},
         textColor = if (isBoxClicked) Color.White else box.color
     )
 }

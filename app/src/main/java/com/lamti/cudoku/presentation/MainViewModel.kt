@@ -26,7 +26,6 @@ class MainViewModel(
     val isSolved = savedState.getStateFlow(IS_SOLVED, false)
     val boxIndexClicked = savedState.getStateFlow(BOX_INDEX_CLICKED, -1)
 
-
     private val _board: MutableStateFlow<List<Cell>> = MutableStateFlow(emptyList())
     val board: SharedFlow<List<Cell>> = gameEngine.board
 

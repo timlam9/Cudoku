@@ -2,7 +2,6 @@ package com.lamti.cudoku.presentation.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -11,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.lamti.cudoku.domain.Solver.Companion.GRID_SIZE
-import com.lamti.cudoku.domain.rowIndex
+import com.lamti.cudoku.domain.regionIndex
 
 @Composable
 fun SudokuGrid(
@@ -31,23 +30,25 @@ fun SudokuGrid(
         itemsIndexed(
             items = boxes,
         ) { index, box ->
-            val extraPaddingTop = if (rowIndex(index, GRID_SIZE).mod(3) == 0 && rowIndex(index, GRID_SIZE) != 0) {
-                20.dp
-            } else 0.dp
-
-            val modifier = if (!isLoading && !box.isInitialValue)
-                Modifier
-                    .padding(top = extraPaddingTop)
-                    .clickable(onClick = { if (boxIndexClicked == index) onClick(-1) else onClick(index) })
-            else
-                Modifier
-                    .padding(top = extraPaddingTop)
+            val modifier = Modifier.getModifier(isLoading, box, boxIndexClicked, index, onClick)
 
             SudokuBox(
                 modifier = modifier,
                 isBoxClicked = index == boxIndexClicked,
+                isOddBox = regionIndex(index, GRID_SIZE).mod(2) == 0,
                 box = box,
             )
         }
     }
+}
+
+private fun Modifier.getModifier(
+    isLoading: Boolean,
+    box: SudokuDataBox,
+    boxIndexClicked: Int,
+    index: Int,
+    onClick: (index: Int) -> Unit
+): Modifier {
+    return if (isLoading || box.isInitialValue) this
+    else clickable(onClick = { if (boxIndexClicked == index) onClick(-1) else onClick(index) })
 }
