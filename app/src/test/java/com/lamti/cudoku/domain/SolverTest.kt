@@ -1,20 +1,21 @@
 package com.lamti.cudoku.domain
 
-import org.junit.Assert.assertEquals
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.test.runTest
+import org.amshove.kluent.shouldBe
 import org.junit.Test
 
 class SolverTest {
 
-    private val solver = Solver()
+    private val solver = Solver(MutableSharedFlow())
 
     @Test
-    fun `generate solution`() {
+    fun `generate solution`() = runTest {
         val startingGrid = createGridFrom(initialGrid)
-        val finalGrid = createGridFrom(correctSolutionGrid).map { it.value }
 
-        val result = solver.solve(startingGrid).map { it.value }
+        val result = solver.solve(startingGrid)
 
-        assertEquals(finalGrid, result)
+        result shouldBe true
     }
 
 }

@@ -9,6 +9,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,6 +21,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import com.lamti.cudoku.domain.createGridFrom
 import com.lamti.cudoku.domain.initialGrid
+import com.lamti.cudoku.presentation.components.SudokuDataBox
 import com.lamti.cudoku.presentation.components.SudokuScreen
 import com.lamti.cudoku.presentation.components.toCells
 import com.lamti.cudoku.presentation.components.toSudokuDataBoxes
@@ -48,7 +50,7 @@ class MainActivity : ComponentActivity() {
                     val isBoxClicked by viewModel.isBoxClicked.collectAsState()
                     val boxIndexClicked by viewModel.boxIndexClicked.collectAsState()
 
-                    val board = remember { mutableStateOf(createGridFrom(initialGrid).toSudokuDataBoxes()) }
+                    val board: MutableState<List<SudokuDataBox>> = remember { mutableStateOf(createGridFrom(initialGrid).toSudokuDataBoxes()) }
 
                     LaunchedEffect(Unit) {
                         viewModel.board.onEach { board.value = it.toSudokuDataBoxes() }.launchIn(lifecycleScope)

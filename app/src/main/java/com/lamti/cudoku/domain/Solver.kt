@@ -1,21 +1,8 @@
 package com.lamti.cudoku.domain
 
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 
-class Solver {
-
-    private val _board: MutableSharedFlow<List<Cell>> = MutableSharedFlow()
-    val board: SharedFlow<List<Cell>> = _board.asSharedFlow()
-
-    suspend fun updateBoard(grid: List<Cell>) {
-        _board.emit(grid)
-    }
-
-    suspend fun createNewBoard(grid: List<Cell>) {
-        _board.emit(grid)
-    }
+class Solver(private val currentBoard: MutableSharedFlow<List<Cell>>) {
 
     suspend fun solve(initialGrid: List<Cell>): Boolean = solveBoard(initialGrid.toMutableList())
 
@@ -65,7 +52,7 @@ class Solver {
                     ) {
                         board[index] = Cell(possibleInput, false)
                         println("Add possible input: $possibleInput in position: $index")
-                        _board.emit(board)
+                        currentBoard.emit(board)
 
                         if (solveBoard(board)) {
                             println("Board solved")
@@ -73,7 +60,7 @@ class Solver {
                         } else {
                             println("Delete input: $possibleInput in position: $index")
                             board[index] = Cell(0, false)
-                            _board.emit(board)
+                            currentBoard.emit(board)
                         }
                     }
                 }

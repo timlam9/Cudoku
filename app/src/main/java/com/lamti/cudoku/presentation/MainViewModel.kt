@@ -6,12 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.lamti.cudoku.domain.Cell
 import com.lamti.cudoku.domain.GameEngine
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MainViewModel(
@@ -24,12 +26,17 @@ class MainViewModel(
     val isSolved = savedState.getStateFlow(IS_SOLVED, false)
     val boxIndexClicked = savedState.getStateFlow(BOX_INDEX_CLICKED, -1)
 
+
+    private val _board: MutableStateFlow<List<Cell>> = MutableStateFlow(emptyList())
     val board: SharedFlow<List<Cell>> = gameEngine.board
 
     init {
         board
             .filterNot { isLoading.value }
-            .onEach { savedState[IS_SOLVED] = gameEngine.checkForSolution(it) }
+            .onEach { grid ->
+                _board.update { grid }
+                savedState[IS_SOLVED] = gameEngine.checkForSolution(grid)
+            }
             .launchIn(viewModelScope)
 
         isSolved
