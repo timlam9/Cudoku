@@ -27,9 +27,18 @@ fun SudokuBox(
     SudokuBox(
         modifier = modifier,
         text = if (box.value != EMPTY_VALUE) box.value.toString() else "",
-        color = if (isBoxClicked) Color.Blue else { if (isOddBox) Color.White else Color.LightGray},
-        textColor = if (isBoxClicked) Color.White else box.color
+        color = if (isBoxClicked) Color.Blue else {
+            if (isOddBox) Color.White else Color.LightGray
+        },
+        textColor = if (isBoxClicked) Color.White else mapBoxColor(box)
     )
+}
+
+private fun mapBoxColor(box: SudokuDataBox) = when (box.boxColor) {
+    BoxColor.White -> Color.White
+    BoxColor.Black -> Color.Black
+    BoxColor.LightGray -> Color.LightGray
+    BoxColor.Blue -> Color.Blue
 }
 
 @Composable
@@ -59,16 +68,3 @@ fun SudokuBox(
         }
     }
 }
-
-fun List<Cell>.toSudokuDataBoxes() = map { it.toSudokuDataBox() }
-
-fun Cell.toSudokuDataBox() = SudokuDataBox(
-    value = value,
-    color = if (isInitialValue) Color.Black else Color.Blue,
-    selected = false,
-    isInitialValue = isInitialValue
-)
-
-fun List<SudokuDataBox>.toCells() = map { it.toCell() }
-
-fun SudokuDataBox.toCell() = Cell(value = value, isInitialValue = isInitialValue)

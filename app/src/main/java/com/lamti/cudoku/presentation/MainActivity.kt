@@ -14,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,7 +51,9 @@ class MainActivity : ComponentActivity() {
                     val isBoxClicked by viewModel.isBoxClicked.collectAsState()
                     val boxIndexClicked by viewModel.boxIndexClicked.collectAsState()
 
-                    val board: MutableState<List<SudokuDataBox>> = remember { mutableStateOf(createGridFrom(initialGrid).toSudokuDataBoxes()) }
+                    val board: MutableState<List<SudokuDataBox>> = rememberSaveable {
+                        mutableStateOf(createGridFrom(initialGrid).toSudokuDataBoxes())
+                    }
 
                     LaunchedEffect(Unit) {
                         viewModel.board.onEach { board.value = it.toSudokuDataBoxes() }.launchIn(lifecycleScope)

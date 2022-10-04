@@ -26,16 +26,12 @@ class MainViewModel(
     val isSolved = savedState.getStateFlow(IS_SOLVED, false)
     val boxIndexClicked = savedState.getStateFlow(BOX_INDEX_CLICKED, -1)
 
-    private val _board: MutableStateFlow<List<Cell>> = MutableStateFlow(emptyList())
     val board: SharedFlow<List<Cell>> = gameEngine.board
 
     init {
         board
             .filterNot { isLoading.value }
-            .onEach { grid ->
-                _board.update { grid }
-                savedState[IS_SOLVED] = gameEngine.checkForSolution(grid)
-            }
+            .onEach { grid -> savedState[IS_SOLVED] = gameEngine.checkForSolution(grid) }
             .launchIn(viewModelScope)
 
         isSolved
