@@ -15,7 +15,7 @@ import com.lamti.cudoku.domain.rowIndex
 
 @Composable
 fun SudokuGrid(
-    boxes: List<UiBox>,
+    boxes: List<SudokuDataBox>,
     boxSize: Int,
     isLoading: Boolean,
     boxIndexClicked: Int,

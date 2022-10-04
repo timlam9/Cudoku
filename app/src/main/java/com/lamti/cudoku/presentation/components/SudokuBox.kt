@@ -21,7 +21,7 @@ import com.lamti.cudoku.domain.Cell
 fun SudokuBox(
     modifier: Modifier = Modifier,
     isBoxClicked: Boolean,
-    box: UiBox,
+    box: SudokuDataBox,
 ) {
     SudokuBox(
         modifier = modifier,
@@ -59,15 +59,15 @@ fun SudokuBox(
     }
 }
 
-fun List<Cell>.toUiBoxes() = map { it.toUiBox() }
+fun List<Cell>.toSudokuDataBoxes() = map { it.toSudokuDataBox() }
 
-fun Cell.toUiBox() = UiBox(
+fun Cell.toSudokuDataBox() = SudokuDataBox(
     value = value,
     color = if (isInitialValue) Color.Black else Color.Blue,
     selected = false,
     isInitialValue = isInitialValue
 )
 
-fun List<UiBox>.toCells() = map { it.toCell() }
+fun List<SudokuDataBox>.toCells() = map { it.toCell() }
 
-fun UiBox.toCell() = Cell(value = value, isInitialValue = isInitialValue)
+fun SudokuDataBox.toCell() = Cell(value = value, isInitialValue = isInitialValue)

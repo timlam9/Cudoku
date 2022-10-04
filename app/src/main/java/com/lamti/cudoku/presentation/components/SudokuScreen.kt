@@ -12,7 +12,7 @@ import com.lamti.cudoku.R
 
 @Composable
 fun SudokuScreen(
-    board: List<UiBox>,
+    board: List<SudokuDataBox>,
     boxSize: Int,
     keySize: Int,
     isLoading: Boolean,

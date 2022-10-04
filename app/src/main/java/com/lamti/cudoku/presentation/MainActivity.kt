@@ -22,7 +22,7 @@ import com.lamti.cudoku.domain.createGridFrom
 import com.lamti.cudoku.domain.initialGrid
 import com.lamti.cudoku.presentation.components.SudokuScreen
 import com.lamti.cudoku.presentation.components.toCells
-import com.lamti.cudoku.presentation.components.toUiBoxes
+import com.lamti.cudoku.presentation.components.toSudokuDataBoxes
 import com.lamti.cudoku.presentation.theme.CudokuTheme
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -48,10 +48,10 @@ class MainActivity : ComponentActivity() {
                     val isBoxClicked by viewModel.isBoxClicked.collectAsState()
                     val boxIndexClicked by viewModel.boxIndexClicked.collectAsState()
 
-                    val board = remember { mutableStateOf(createGridFrom(initialGrid).toUiBoxes()) }
+                    val board = remember { mutableStateOf(createGridFrom(initialGrid).toSudokuDataBoxes()) }
 
                     LaunchedEffect(Unit) {
-                        viewModel.board.onEach { board.value = it.toUiBoxes() }.launchIn(lifecycleScope)
+                        viewModel.board.onEach { board.value = it.toSudokuDataBoxes() }.launchIn(lifecycleScope)
                     }
 
                     SudokuScreen(
@@ -81,7 +81,7 @@ fun DefaultPreview(viewModel: MainViewModel = MainViewModel(savedState = SavedSt
 
     CudokuTheme {
         SudokuScreen(
-            board = viewModel.board.collectAsState(createGridFrom(initialGrid)).value.toUiBoxes(),
+            board = viewModel.board.collectAsState(createGridFrom(initialGrid)).value.toSudokuDataBoxes(),
             boxSize = boxSize,
             keySize = boxSize,
             isLoading = false,
