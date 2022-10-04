@@ -1,5 +1,6 @@
 package com.lamti.cudoku.presentation.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.GridCells
@@ -13,24 +14,40 @@ import com.lamti.cudoku.domain.Solver.Companion.GRID_SIZE
 import com.lamti.cudoku.domain.rowIndex
 
 @Composable
-fun SudokuGrid(boxes: List<UiBox>, boxSize: Int) {
+fun SudokuGrid(
+    boxes: List<UiBox>,
+    boxSize: Int,
+    isLoading: Boolean,
+    boxIndexClicked: Int,
+    onClick: (index: Int) -> Unit
+) {
     val gridState = rememberLazyListState()
+
     LazyVerticalGrid(
         cells = GridCells.Adaptive(boxSize.dp),
         contentPadding = PaddingValues(GRID_PADDING.dp),
         state = gridState
     ) {
-        itemsIndexed(boxes) { index, box ->
+        itemsIndexed(
+            items = boxes,
+        ) { index, box ->
             val extraPaddingTop = if (rowIndex(index, GRID_SIZE).mod(3) == 0 && rowIndex(index, GRID_SIZE) != 0) {
                 20.dp
             } else 0.dp
 
-//            val linePadding = if (columnIndex(index, GRID_SIZE).mod(3) == 0 && columnIndex(index, GRID_SIZE) != 0) {
-////                Divider(Modifier.width(16.dp), thickness = 16.dp, color = Color.Red)
-//                20.dp
-//            } else 0.dp
+            val modifier = if (!isLoading && !box.isInitialValue)
+                Modifier
+                    .padding(top = extraPaddingTop)
+                    .clickable(onClick = { if (boxIndexClicked == index) onClick(-1) else onClick(index) })
+            else
+                Modifier
+                    .padding(top = extraPaddingTop)
 
-            SudokuBox(modifier = Modifier.padding(top = extraPaddingTop), box = box)
+            SudokuBox(
+                modifier = modifier,
+                isBoxClicked = index == boxIndexClicked,
+                box = box,
+            )
         }
     }
 }

@@ -18,11 +18,16 @@ import androidx.compose.ui.unit.sp
 import com.lamti.cudoku.domain.Cell
 
 @Composable
-fun SudokuBox(modifier: Modifier = Modifier, box: UiBox) {
+fun SudokuBox(
+    modifier: Modifier = Modifier,
+    isBoxClicked: Boolean,
+    box: UiBox,
+) {
     SudokuBox(
         modifier = modifier,
         text = if (box.value != EMPTY_VALUE) box.value.toString() else "",
-        textColor = box.color,
+        color = if (isBoxClicked) Color.Blue else Color.White,
+        textColor = if (isBoxClicked) Color.White else box.color
     )
 }
 
@@ -32,7 +37,7 @@ fun SudokuBox(
     text: String,
     color: Color = MaterialTheme.colors.background,
     textColor: Color = MaterialTheme.colors.onBackground,
-    showText: Boolean = true
+    showText: Boolean = true,
 ) {
     Card(
         backgroundColor = color,
@@ -56,4 +61,13 @@ fun SudokuBox(
 
 fun List<Cell>.toUiBoxes() = map { it.toUiBox() }
 
-fun Cell.toUiBox() = UiBox(value = value, color = if (isInitialValue) Color.Black else Color.Blue, selected = false)
+fun Cell.toUiBox() = UiBox(
+    value = value,
+    color = if (isInitialValue) Color.Black else Color.Blue,
+    selected = false,
+    isInitialValue = isInitialValue
+)
+
+fun List<UiBox>.toCells() = map { it.toCell() }
+
+fun UiBox.toCell() = Cell(value = value, isInitialValue = isInitialValue)

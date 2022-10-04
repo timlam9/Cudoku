@@ -21,6 +21,7 @@ import androidx.lifecycle.lifecycleScope
 import com.lamti.cudoku.domain.createGridFrom
 import com.lamti.cudoku.domain.initialGrid
 import com.lamti.cudoku.presentation.components.SudokuScreen
+import com.lamti.cudoku.presentation.components.toCells
 import com.lamti.cudoku.presentation.components.toUiBoxes
 import com.lamti.cudoku.presentation.theme.CudokuTheme
 import kotlinx.coroutines.flow.launchIn
@@ -40,9 +41,12 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val screenWidth = LocalConfiguration.current.screenWidthDp
                     val boxSize by remember { mutableStateOf(screenWidth / 9) }
+                    val keySize by remember { mutableStateOf(screenWidth / 5) }
 
                     val isLoading by viewModel.isLoading.collectAsState()
                     val isSolved by viewModel.isSolved.collectAsState()
+                    val isBoxClicked by viewModel.isBoxClicked.collectAsState()
+                    val boxIndexClicked by viewModel.boxIndexClicked.collectAsState()
 
                     val board = remember { mutableStateOf(createGridFrom(initialGrid).toUiBoxes()) }
 
@@ -50,8 +54,18 @@ class MainActivity : ComponentActivity() {
                         viewModel.board.onEach { board.value = it.toUiBoxes() }.launchIn(lifecycleScope)
                     }
 
-                    SudokuScreen(board.value, boxSize, isLoading, isSolved) {
-                        viewModel.onSolveClick()
+                    SudokuScreen(
+                        board = board.value,
+                        boxSize = boxSize,
+                        keySize = keySize,
+                        isLoading = isLoading,
+                        isSolved = isSolved,
+                        isBoxClicked = isBoxClicked,
+                        boxIndexClicked = boxIndexClicked,
+                        onSolveClick = { viewModel.onSolveClick() },
+                        onBoxClick = { viewModel.onBoxClick(it) }
+                    ) {
+                        viewModel.onKeyboardNumberClick(it, board.value.toCells().toMutableList())
                     }
                 }
             }
@@ -67,10 +81,15 @@ fun DefaultPreview(viewModel: MainViewModel = MainViewModel(savedState = SavedSt
 
     CudokuTheme {
         SudokuScreen(
-            viewModel.board.collectAsState(createGridFrom(initialGrid)).value.toUiBoxes(),
-            boxSize,
+            board = viewModel.board.collectAsState(createGridFrom(initialGrid)).value.toUiBoxes(),
+            boxSize = boxSize,
+            keySize = boxSize,
             isLoading = false,
-            isSolved = false
+            isSolved = false,
+            isBoxClicked = false,
+            boxIndexClicked = 10,
+            onSolveClick = {},
+            onBoxClick = {}
         ) {}
     }
 }

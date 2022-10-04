@@ -9,6 +9,10 @@ class Solver {
     private val _board: MutableSharedFlow<List<Cell>> = MutableSharedFlow()
     val board: SharedFlow<List<Cell>> = _board.asSharedFlow()
 
+    suspend fun updateBoard(grid: List<Cell>) {
+        _board.emit(grid)
+    }
+
     suspend fun createNewBoard(grid: List<Cell>) {
         _board.emit(grid)
     }
@@ -18,33 +22,27 @@ class Solver {
     private fun isNumberInRow(board: List<Cell>, number: Int, row: Int): Boolean {
         for (i in 0 until GRID_SIZE) {
             if (board.splitToRows()[row][i].value == number) {
-//                println("Number $number found in row: $row")
                 return true
             }
         }
-//        println("Number $number not found in the row")
         return false
     }
 
     private fun isNumberInColumn(board: List<Cell>, number: Int, column: Int): Boolean {
         for (i in 0 until GRID_SIZE) {
             if (board.splitToColumns(GRID_SIZE)[column][i].value == number) {
-//                println("Number $number found in column: $column")
                 return true
             }
         }
-//        println("Number $number not found in the column")
         return false
     }
 
     private fun isNumberInRegion(board: List<Cell>, number: Int, region: Int): Boolean {
         for (i in 0 until GRID_SIZE) {
             if (board.splitToRegions(GRID_SIZE)[region][i].value == number) {
-//                println("Number $number found in region: $region")
                 return true
             }
         }
-//        println("Number $number not found in the region")
         return false
     }
 

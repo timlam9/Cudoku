@@ -1,25 +1,27 @@
 package com.lamti.cudoku.domain
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.withContext
 
-class GameEngine(private val solver: Solver = Solver()) {
+class GameEngine(private val solver: Solver = Solver(), private val solutionChecker: SolutionChecker = SolutionChecker()) {
 
     val board: SharedFlow<List<Cell>> = solver.board
 
-    suspend fun solve(grid: List<Cell> = createGridFrom(initialGrid)): Boolean = solver.solve(grid)
+    suspend fun solve(grid: List<Cell> = createGridFrom(initialGrid)): Boolean = withContext(Dispatchers.Default) {
+        solver.solve(grid)
+    }
 
-    suspend fun createNewGame() {
+    suspend fun createNewGame() = withContext(Dispatchers.Default) {
         solver.createNewBoard(createGridFrom(initialGrid))
     }
-}
 
-const val initialGrid = "5,3,,,7,,,,\n" +
-        "6,,,1,9,5,,,\n" +
-        ",9,8,,,,,6,\n" +
-        "8,,,,6,,,,3\n" +
-        "4,,,8,,3,,,1\n" +
-        "7,,,,2,,,,6\n" +
-        ",6,,,,,2,8,\n" +
-        ",,,4,1,9,,,5\n" +
-        ",,,,8,,,7,9"
+    suspend fun updateBoard(grid: List<Cell>) = withContext(Dispatchers.Default) {
+        solver.updateBoard(grid)
+    }
+
+    suspend fun checkForSolution(grid: List<Cell>): Boolean = withContext(Dispatchers.Default) {
+        solutionChecker.checkSolution(startingGrid = createGridFrom(initialGrid), finalGrid = grid)
+    }
+}
 
