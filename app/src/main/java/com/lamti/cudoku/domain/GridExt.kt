@@ -24,3 +24,6 @@ fun rowIndex(index: Int, n: Int): Int = index.div(n)
 
 fun columnIndex(index: Int, n: Int): Int = index.mod(n)
 
+fun Int.isInDiagonalRegion(): Boolean = regionIndex(this, Solver.GRID_SIZE).let { regionIndex ->
+    regionIndex == 0 || regionIndex == 4 || regionIndex == 8
+}

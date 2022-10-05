@@ -32,4 +32,22 @@ class ValidatorTest {
 
         assert(result)
     }
+
+    @Test
+    fun `Validate list`() {
+        val list = List(9) { Cell(it + 1, false) }
+
+        val result = validator.validateList(list)
+
+        assert(result)
+    }
+
+    @Test
+    fun `Validate grid`() {
+        val finalGrid = createGridFrom(correctSolutionGrid)
+
+        val result = validator.validateGrid(finalGrid)
+
+        assert(result)
+    }
 }

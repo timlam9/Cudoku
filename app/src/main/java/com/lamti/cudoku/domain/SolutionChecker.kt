@@ -6,9 +6,7 @@ class SolutionChecker(private val validator: Validator = Validator(9)) {
         return finalGrid.isSolved() && finalGrid.matches(startingGrid)
     }
 
-    private fun List<Cell>.isSolved(): Boolean = with(validator) {
-        validateRows(this@isSolved) && validateColumns(this@isSolved) && validateRegions(this@isSolved)
-    }
+    private fun List<Cell>.isSolved(): Boolean = validator.validateGrid(this)
 
     private fun List<Cell>.matches(startingGrid: List<Cell>): Boolean {
         val finalMap: List<IndexedValue<Cell>> = this.withIndex().toList()
