@@ -19,4 +19,12 @@ class SudokuPuzzleGeneratorTest {
             .all { validator.validateList(it) }
             .shouldBeTrue()
     }
+
+    @Test
+    fun `fill board with valid numbers`() {
+        puzzleGenerator.fillBoard()
+            .splitToRegions(GRID_SIZE)
+            .all { validator.validateList(it) }
+            .shouldBeTrue()
+    }
 }

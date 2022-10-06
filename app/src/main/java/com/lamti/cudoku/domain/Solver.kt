@@ -2,7 +2,7 @@ package com.lamti.cudoku.domain
 
 import kotlinx.coroutines.flow.MutableSharedFlow
 
-class Solver(private val currentBoard: MutableSharedFlow<List<Cell>>) {
+class Solver(private val currentBoard: MutableSharedFlow<List<Cell>> = MutableSharedFlow()) {
 
     suspend fun solve(initialGrid: List<Cell>): Boolean = solveBoard(initialGrid.toMutableList())
 
@@ -33,7 +33,7 @@ class Solver(private val currentBoard: MutableSharedFlow<List<Cell>>) {
         return false
     }
 
-    private fun isPossibleInputValid(board: List<Cell>, number: Int, row: Int, column: Int, region: Int): Boolean =
+    fun isPossibleInputValid(board: List<Cell>, number: Int, row: Int, column: Int, region: Int): Boolean =
         !isNumberInRow(board, number, row) &&
                 !isNumberInColumn(board, number, column) &&
                 !isNumberInRegion(board, number, region)
