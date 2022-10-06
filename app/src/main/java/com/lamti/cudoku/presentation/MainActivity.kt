@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
                         isSolved = isSolved,
                         isBoxClicked = isBoxClicked,
                         boxIndexClicked = boxIndexClicked,
-                        onSolveClick = { viewModel.onSolveClick() },
+                        onSolveClick = { viewModel.onSolveClick(board.value.toCells()) },
                         onBoxClick = { viewModel.onBoxClick(it) }
                     ) {
                         viewModel.onKeyboardNumberClick(it, board.value.toCells().toMutableList())

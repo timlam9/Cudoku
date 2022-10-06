@@ -5,15 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lamti.cudoku.domain.Cell
 import com.lamti.cudoku.domain.GameEngine
+import com.lamti.cudoku.domain.Level
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MainViewModel(
@@ -31,6 +30,7 @@ class MainViewModel(
     init {
         board
             .filterNot { isLoading.value }
+            .filterNot { it.map { it.value }.contains(0) }
             .onEach { grid -> savedState[IS_SOLVED] = gameEngine.checkForSolution(grid) }
             .launchIn(viewModelScope)
 
@@ -56,21 +56,24 @@ class MainViewModel(
         }
     }
 
-    fun onSolveClick() {
-        if (isSolved.value) createNewGame() else solveBoard()
+    fun onSolveClick(board: List<Cell>) {
+        if (isSolved.value) createNewGame() else solveBoard(board)
     }
 
     private fun createNewGame() {
         viewModelScope.launch {
-            gameEngine.createNewGame()
+            savedState[IS_LOADING] = true
             savedState[IS_SOLVED] = false
+            gameEngine.createNewGame(Level.JUNIOR) {
+                savedState[IS_LOADING] = false
+            }
         }
     }
 
-    private fun solveBoard() {
+    private fun solveBoard(board: List<Cell>) {
         savedState[IS_LOADING] = true
         viewModelScope.launch(Dispatchers.Default) {
-            if (gameEngine.solve()) {
+            if (gameEngine.solve(board)) {
                 savedState[IS_LOADING] = false
                 savedState[IS_SOLVED] = true
             }
